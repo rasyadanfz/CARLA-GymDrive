@@ -1,10 +1,10 @@
 # Pygame Window
-IM_WIDTH                = 1920
-IM_HEIGHT               = 1080
+IM_WIDTH                = 1280
+IM_HEIGHT               = 720
 NUM_COLS                = 2  # Number of columns in the grid
 NUM_ROWS                = 2  # Number of rows in the grid
 MARGIN                  = 30
-BORDER_WIDTH            = 5
+BORDER_WIDTH            = 10
 
 # Vehicle and Sensors attributes
 SENSOR_FPS              = 30
@@ -23,6 +23,6 @@ SIM_NO_RENDERING        = False
 SIM_FPS                 = 30
 
 # Environment attributes
-ENV_SCENARIOS_FILE      = 'src/config/default_scenarios.json'
-ENV_MAX_STEPS           = 430 # Max number of steps per episode. I suggest running the helpfull-scipts/check_max_num_steps.py script to get your number
+ENV_SCENARIOS_FILE      = 'src/config/train_scenario.json'
+ENV_MAX_STEPS           = 1800 # Max number of steps per episode. I suggest running the helpfull-scipts/check_max_num_steps.py script to get your number
 ENV_WAYPOINT_SPACING    = 7.0

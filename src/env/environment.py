@@ -119,7 +119,7 @@ class CarlaEnv(gym.Env):
     # Options may include the name of the scenario to load    
     def reset(self, seed=None, options={'scenario_name': None}):
         # 1. Choose a scenario
-        if options['scenario_name'] is not None:
+        if options and options['scenario_name'] is not None:
             self.__active_scenario_name = options['scenario_name']
         else:
             self.__active_scenario_name = self.__chose_situation(seed)
@@ -326,6 +326,7 @@ class CarlaEnv(gym.Env):
             if self.__verbose:
                 print("Traffic spawned!")
         self.__toggle_lights()
+
         
         # Tick the world to make sure everything is loaded
         self.__world.tick()
@@ -402,7 +403,7 @@ class CarlaEnv(gym.Env):
         else:
             num_vehicles = random.randint(1, 20)
         
-        self.__world.spawn_vehicles_around_ego(self.__vehicle.get_vehicle(), radius=100, num_vehicles_around_ego=num_vehicles, seed=seed)
+        self.__world.spawn_vehicles_around_ego(self.__vehicle.get_vehicle(), radius=80, num_vehicles_around_ego=num_vehicles, seed=seed)
     
     def __choose_random_situation(self, seed=None):
         if seed:
@@ -461,6 +462,7 @@ class CarlaEnv(gym.Env):
         while current_waypoint.transform.location.distance(target_waypoint.transform.location) > spacing:
             waypoints.append(current_waypoint.transform.location)
             current_waypoint = current_waypoint.next(spacing)[0]
+
         
         return waypoints[1:] # Take out the first waypoint because it is the starting point
     
