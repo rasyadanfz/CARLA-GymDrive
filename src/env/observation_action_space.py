@@ -4,7 +4,7 @@ import numpy as np
 # Change this according to your needs.
 observation_shapes = {
     'rgb_data': (360, 640, 3),
-    'lidar_data': (3, 500), 
+    'lidar_data': (3, 1000), 
     'position': (3,),
     'target_position': (3,),
     'next_waypoint_position': (3,),

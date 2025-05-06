@@ -26,8 +26,17 @@ class PreProcessing:
             - situation: The current situation of the vehicle (Road, Roundabout, Junction, Tunnel)
         '''
         observation_data['lidar_data'] = self.__process_lidar(observation_data['lidar_data'])
+        target_distance = self.distance(observation_data['position'], observation_data['target_position'])
+        next_waypoint_distance = self.distance(observation_data['position'], observation_data['next_waypoint_position'])
+        speed = observation_data['speed'][0]
+
+        data = {
+            'rgb_data': observation_data['rgb_data'],
+            'lidar_data': observation_data['lidar_data'],
+            'others': np.array([target_distance, next_waypoint_distance, speed]),
+        }
         
-        return observation_data
+        return data
 
     # This method extracts the features from the lidar data before feeding it to the policy network
     def __process_lidar(self, lidar_data):
@@ -36,7 +45,7 @@ class PreProcessing:
         
         # Sample the lidar data so the number of points remains constant without affecting the quality of the data
         sampler = FarthestSampler()
-        lidar_data, _ = sampler.sample(lidar_data, 500)
+        lidar_data, _ = sampler.sample(lidar_data, 1000)
         
         return np.float32(lidar_data)
     

@@ -24,5 +24,5 @@ SIM_FPS                 = 30
 
 # Environment attributes
 ENV_SCENARIOS_FILE      = 'src/config/train_scenario.json'
-ENV_MAX_STEPS           = 1800 # Max number of steps per episode. I suggest running the helpfull-scipts/check_max_num_steps.py script to get your number
+ENV_MAX_STEPS           = 2000 # Max number of steps per episode. I suggest running the helpfull-scipts/check_max_num_steps.py script to get your number
 ENV_WAYPOINT_SPACING    = 7.0
