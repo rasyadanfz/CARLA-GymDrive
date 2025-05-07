@@ -18,10 +18,10 @@ import src.config.configuration as config
 import time
 
 class World:
-    def __init__(self, client=None, synchronous_mode=False) -> None:
+    def __init__(self, client=None, synchronous_mode=False, port=None) -> None:
         self.__client = client
         if self.__client is None:
-            self.__client = carla.Client(config.SIM_HOST, config.SIM_PORT)
+            self.__client = carla.Client(config.SIM_HOST, port if port is not None else config.SIM_PORT)
             self.__client.set_timeout(config.SIM_TIMEOUT)
         self.__world = self.__client.get_world()
         self.__weather_control = WeatherControl(self.__world)
