@@ -3,7 +3,7 @@ import numpy as np
 
 # Change this according to your needs.
 observation_shapes = {
-    'rgb_data': (360, 640, 3),
+    'rgb_data': (84, 84, 3),
     'lidar_data': (3, 500), 
     'position': (3,),
     'target_position': (3,),
