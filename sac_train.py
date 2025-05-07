@@ -72,8 +72,9 @@ def main():
         policy="MultiInputPolicy",
         policy_kwargs=policy_kwargs,
         env=env,
-        learning_starts=30000,
-        buffer_size=450000,
+        learning_starts=20000,
+        optimize_memory_usage=True,
+        buffer_size=200000,
     )
     
     # Calculate total_timesteps based on NUM_EPISODES episodes
