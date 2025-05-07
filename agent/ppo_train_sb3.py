@@ -8,10 +8,10 @@ from ppo_architecture import CustomExtractor_PPO_End2end
 import numpy as np
 import wandb
 
-LOG_IN_WANDB = True
+LOG_IN_WANDB = False
 END2END = True
-NUM_EPISODES = 30
-EVALUATE_EVERY = 1000
+NUM_EPISODES = 1000
+EVALUATE_EVERY = 500
 
 # Set up wandb
 if LOG_IN_WANDB:
@@ -39,7 +39,7 @@ class CustomEvalCallback(EvalCallback):
         return (self.eval_results, self.episode_numbers)
 
 def make_env():
-    env = gym.make('carla-rl-gym-v0', time_limit=60, initialize_server=False, random_weather=False, synchronous_mode=True, continuous=True, show_sensor_data=False, has_traffic=True, verbose=False)
+    env = gym.make('carla-rl-gym-v0', time_limit=30, initialize_server=False, random_weather=False, synchronous_mode=True, continuous=True, show_sensor_data=False, has_traffic=True, verbose=False)
     env = DummyVecEnv([lambda: env])
     env = VecTransposeImage(env)
     return env
@@ -70,7 +70,7 @@ def main():
         policy="MultiInputPolicy",
         policy_kwargs=policy_kwargs,
         env=env,
-        n_steps=1024,
+        n_steps=512,
         batch_size=64,
         n_epochs=4,
         gamma=0.999,

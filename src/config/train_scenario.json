@@ -19,16 +19,6 @@
     "traffic_density": "High",
     "situation": "Road"
   },
-  "Town01-WetNight-Road-1": {
-    "map_name": "Town01",
-    "weather_condition": "Wet Night",
-    "initial_position": {"x": 65.0, "y": -2.2, "z": 0.3},
-    "initial_rotation": {"pitch": 0.0, "yaw": 180.0, "roll": 0.0},
-    "target_position": {"x": -2.1, "y": 30.9, "z": 0.3},
-    "target_gnss": {"lat": -0.000286, "lon": -0.000019, "alt": 0},
-    "traffic_density": "High",
-    "situation": "Road"
-  },
   "Town01-ClearNoon-Road-2": {
     "map_name": "Town01",
     "weather_condition": "Clear Noon",
@@ -36,7 +26,7 @@
     "initial_rotation": {"pitch": 0.0, "yaw": 90.0, "roll": 0.0},
     "target_position": {"x": -2.1, "y": 237.3, "z": 0.3},
     "target_gnss": {"lat": -0.002141, "lon": -0.000019, "alt": 0},
-    "traffic_density": "High",
+    "traffic_density": "Low",
     "situation": "Road"
   },
   "Town02-ClearNoon-Road-0": {
@@ -59,14 +49,14 @@
       "traffic_density": "High",
       "situation": "Road"
     },
-    "Town02-WetNight-Road-2": {
+    "Town02-ClearNoon-Road-2": {
       "map_name": "Town02",
-      "weather_condition": "Wet Night",
+      "weather_condition": "Clear Noon",
       "initial_position": {"x": 162.92, "y": 237.43, "z": 0.50},
       "initial_rotation": {"pitch": 0.0, "yaw": 180.0, "roll": 0.0},
       "target_position": {"x": 66.61, "y": 187.13, "z": 2.41},
       "target_gnss": {"lat": -0.001681, "lon": 0.000598, "alt": 0},
-      "traffic_density": "High",
+      "traffic_density": "Low",
       "situation": "Road"
     },
     "Town02-ClearNoon-Road-3": {

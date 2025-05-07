@@ -5,7 +5,6 @@ from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
-import torchvision.models as models
 
 # Define the continuous action space for PPO
 continuous_action_space = spaces.Box(low=np.array([-1.0, -1.0]), high=np.array([1.0, 1.0]), dtype=np.float32)
@@ -13,8 +12,8 @@ continuous_action_space = spaces.Box(low=np.array([-1.0, -1.0]), high=np.array([
 class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
     def __init__(self, observation_space: spaces.Dict):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.image_dim = 512
-        self.lidar_dim = 256
+        self.image_dim = 128
+        self.lidar_dim = 128
         self.others_dim = 64
         features_dim = self.image_dim + self.lidar_dim + self.others_dim
 
@@ -22,12 +21,26 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
         self.action_dim = continuous_action_space.shape[0]  # Dimensionality of the action space
 
         # Custom CNN for processing the RGB data
-        self.rgb_network = models.resnet18(pretrained=True)
-        self.rgb_network.fc = nn.Identity()
+        self.rgb_network = nn.Sequential(
+            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+
+            nn.Conv2d(32, 64, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.ReLU(),
+
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.AdaptiveAvgPool2d(1)
+        )
 
         # Custom CNN for processing the LiDAR data
         self.lidar_network = nn.Sequential(
-            nn.Linear(3 * 1000, 256),
+            nn.Linear(3 * 500, 128),
             nn.ReLU(),
         )
 

@@ -45,7 +45,7 @@ class PreProcessing:
         
         # Sample the lidar data so the number of points remains constant without affecting the quality of the data
         sampler = FarthestSampler()
-        lidar_data, _ = sampler.sample(lidar_data, 1000)
+        lidar_data, _ = sampler.sample(lidar_data, 500)
         
         return np.float32(lidar_data)
     

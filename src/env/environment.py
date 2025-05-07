@@ -112,7 +112,7 @@ class CarlaEnv(gym.Env):
         # Auxiliar variables
         self.__first_episode = True
         self.__episode_number = 0
-        self.__restart_every = 1000 # Reload every n episodes so it doesn't crash
+        self.__restart_every = 100 # Reload every n episodes so it doesn't crash
         
     # ===================================================== GYM METHODS =====================================================                
     # This reset loads a random scenario and returns the initial state plus information about the scenario
@@ -148,8 +148,9 @@ class CarlaEnv(gym.Env):
         self.__waypoints = [np.array([w.x, w.y, w.z]) for w in self.__waypoints]
         
         # 4. Get the initial state (Get the observation data)
-        time.sleep(0.5)
+        time.sleep(0.3)
         self.__update_observation()
+        print("Observation data updated!")
         
         # 5. Start the reward function
         self.__reward_func.reset(self.__waypoints)
