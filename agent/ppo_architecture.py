@@ -14,8 +14,8 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
     def __init__(self, observation_space: spaces.Dict):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.image_dim = 512
-        self.lidar_dim = 512
-        self.others_dim = 128
+        self.lidar_dim = 256
+        self.others_dim = 64
         features_dim = self.image_dim + self.lidar_dim + self.others_dim
 
         super().__init__(observation_space, features_dim=features_dim)
@@ -27,7 +27,7 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
 
         # Custom CNN for processing the LiDAR data
         self.lidar_network = nn.Sequential(
-            nn.Linear(3 * 1000, 512),
+            nn.Linear(3 * 1000, 256),
             nn.ReLU(),
         )
 
@@ -35,7 +35,7 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
         self.others_network = nn.Sequential(
             nn.Linear(3, 64),
             nn.ReLU(),
-            nn.Linear(64, 128),
+            nn.Linear(64, 64),
             nn.ReLU()
         )
 
@@ -43,16 +43,16 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
         rgb_input, lidar_input, rest_input = self.process_observations(observations)
         lidar_input = lidar_input.view(lidar_input.size(0), -1)  # Flatten the LiDAR data
                 
-        image_features = self.image_model(rgb_input)
+        image_features = self.rgb_network(rgb_input)
         image_features = torch.flatten(image_features, 1)
 
         lidar_output = self.lidar_network(lidar_input)
-        rest_output = self.rest_model(rest_input)
+        rest_output = self.others_network(rest_input)
                 
         if len(rest_output.shape) == 1:
             rest_output = rest_output.unsqueeze(0)
 
-        combined_features = torch.cat((image_features, rest_output), dim=1)
+        combined_features = torch.cat((image_features, lidar_output, rest_output), dim=1)
         return combined_features
 
     def process_observations(self, observations):
@@ -60,13 +60,13 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
         rgb_data = rgb_data / 255.0  # Normalize the pixel values to be in the range [0, 1]
 
         lidar_data = observations['lidar_data']
-        lidar_data = torch.from_numpy(lidar_data).float()
         # Normalize each coordinate axis (X, Y, Z) individually
         lidar_data = (lidar_data - lidar_data.mean(dim=1, keepdim=True)) / (lidar_data.std(dim=1, keepdim=True) + 1e-6)
 
         lidar_data = lidar_data.to(self.device)
+        others_data = observations['others'].float()
 
-        return (rgb_data.float().to(self.device), lidar_data, observations['rest'])
+        return (rgb_data.float().to(self.device), lidar_data.to(self.device), others_data.to(self.device))
 
 
 class CustomExtractor_PPO_Modular(BaseFeaturesExtractor):

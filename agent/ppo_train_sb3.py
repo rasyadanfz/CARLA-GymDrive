@@ -4,12 +4,13 @@ import gymnasium as gym
 
 from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback, CallbackList, StopTrainingOnMaxEpisodes
 from stable_baselines3.common.vec_env import DummyVecEnv, VecTransposeImage
+from ppo_architecture import CustomExtractor_PPO_End2end
 import numpy as np
 import wandb
 
 LOG_IN_WANDB = True
 END2END = True
-NUM_EPISODES = 20
+NUM_EPISODES = 30
 EVALUATE_EVERY = 1000
 
 # Set up wandb
@@ -61,9 +62,13 @@ def main():
     
     callback = CallbackList([checkpoint_callback, eval_callback, callback_max_episodes])
 
+    policy_kwargs = dict(
+        features_extractor_class=CustomExtractor_PPO_End2end,
+    )
     
     model = PPO(
         policy="MultiInputPolicy",
+        policy_kwargs=policy_kwargs,
         env=env,
         n_steps=1024,
         batch_size=64,

@@ -83,7 +83,7 @@ class RGB_Camera:
         if self.__raw_data is not None:
             return self.__raw_data
         else:
-            return np.zeros((480, 640, 3))
+            return np.zeros((360, 640, 3))
     
     def is_ready(self):
         return self.__sensor_ready
