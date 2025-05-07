@@ -73,7 +73,6 @@ def main():
         policy_kwargs=policy_kwargs,
         env=env,
         learning_starts=20000,
-        optimize_memory_usage=True,
         buffer_size=200000,
     )
     
