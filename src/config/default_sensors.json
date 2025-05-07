@@ -1,7 +1,7 @@
 {
     "rgb_camera":{
-        "image_size_x": 640,
-        "image_size_y": 360,
+        "image_size_x": 84,
+        "image_size_y": 84,
         "fov": 90,
         "sensor_tick": 0.0,
         "location_x": 0.8,
