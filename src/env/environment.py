@@ -55,7 +55,7 @@ from src.env.pre_processing import PreProcessing
 # Name: 'carla-rl-gym-v0'
 class CarlaEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": config.SIM_FPS}
-    def __init__(self, continuous=True, scenarios=[], time_limit=60, initialize_server=True, random_weather=False, random_traffic=False, synchronous_mode=True, show_sensor_data=False, has_traffic=True, apply_physics=True, autopilot=False, verbose=True):
+    def __init__(self, continuous=True, scenarios=[], time_limit=60, initialize_server=True, random_weather=False, random_traffic=False, synchronous_mode=True, show_sensor_data=False, has_traffic=True, apply_physics=True, autopilot=False, verbose=True, port=None):
         super().__init__()
         # Read the environment settings
         self.__is_continuous = continuous
@@ -77,7 +77,7 @@ class CarlaEnv(gym.Env):
             self.__show_sensor_data = False
         
         # 2. Connect to the server
-        self.__world = World(synchronous_mode=self.__synchronous_mode)
+        self.__world = World(synchronous_mode=self.__synchronous_mode, port=port if port is not None else None)
 
         # 3. Read the flag and get the appropriate situations
         self.__get_situations(scenarios)
