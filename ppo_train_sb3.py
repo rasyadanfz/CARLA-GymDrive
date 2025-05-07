@@ -44,8 +44,8 @@ def make_env(port):
     return env
 
 def main():
-    ports = [2000,3000]
-    env = SubprocVecEnv([make_env(port) for port in ports])
+    ports = [2000]
+    env = DummyVecEnv([make_env(port) for port in ports])
     env = VecTransposeImage(env)
     
     checkpoint_callback = CheckpointCallback(
