@@ -137,7 +137,6 @@ class Reward:
         '''
         if target_distance <= threshold:
             self.terminated = True
-            print("The vehicle reached the target destination")
             return 100.0
         elif target_distance > threshold and target_distance <= 50.0:
             return (-7.0*target_distance + 395.0) / (9.0 * config.ENV_MAX_STEPS)
