@@ -60,10 +60,13 @@ class Reward:
         Based on the calculations, the max reward for this function is 0 and the min reward is -10;
         lambda = 20
         '''
-        lbd = 20
-        if vehicle.collision_occurred() or vehicle.lane_invasion_occurred():
+        lbd_col = 40
+        lbd_lane = 15
+        if vehicle.collision_occurred():
             self.terminated = True
-            return -lbd
+            return -lbd_col
+        elif vehicle.lane_invasion_occurred():
+            return -lbd_lane
         else:
             return 0
         
@@ -134,6 +137,7 @@ class Reward:
         '''
         if target_distance <= threshold:
             self.terminated = True
+            print("The vehicle reached the target destination")
             return 100.0
         elif target_distance > threshold and target_distance <= 50.0:
             return (-7.0*target_distance + 395.0) / (9.0 * config.ENV_MAX_STEPS)
