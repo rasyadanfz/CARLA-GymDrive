@@ -41,12 +41,13 @@ class CustomEvalCallback(EvalCallback):
 def make_env(port):
     env = gym.make('carla-rl-gym-v0', time_limit=30, initialize_server=False, random_weather=False, synchronous_mode=True, continuous=True, show_sensor_data=False,
                    has_traffic=True, verbose=False, port=port)
+    env = DummyVecEnv([lambda: env])
+    env = VecTransposeImage(env)
     return env
 
 def main():
-    ports = [2000]
-    env = DummyVecEnv([make_env(port) for port in ports])
-    env = VecTransposeImage(env)
+    env = make_env(port=2000)
+    
     
     checkpoint_callback = CheckpointCallback(
         save_freq=10000,
