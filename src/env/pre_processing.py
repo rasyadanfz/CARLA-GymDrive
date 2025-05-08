@@ -25,7 +25,7 @@ class PreProcessing:
             - speed: The speed of the vehicle
             - situation: The current situation of the vehicle (Road, Roundabout, Junction, Tunnel)
         '''
-        observation_data['lidar_data'] = self.__process_lidar(observation_data['lidar_data'])
+        # observation_data['lidar_data'] = self.__process_lidar(observation_data['lidar_data'])
         target_distance = self.distance(observation_data['position'], observation_data['target_position'])
         next_waypoint_distance = self.distance(observation_data['position'], observation_data['next_waypoint_position'])
         speed = observation_data['speed'][0]

@@ -3,25 +3,13 @@
         "image_size_x": 84,
         "image_size_y": 84,
         "fov": 90,
-        "sensor_tick": 0.0,
-        "location_x": 0.8,
-        "location_y": 0.0,
-        "location_z": 1.7
-    },
-    "lidar":{
-        "channels": 32,
-        "range": 52.0,
-        "points_per_second": 64000,
-        "rotation_frequency": 10.0,
-        "upper_fov": 10.0,
-        "lower_fov": -30.0,
-        "sensor_tick": 0.0,
+        "sensor_tick": 0.33,
         "location_x": 0.8,
         "location_y": 0.0,
         "location_z": 1.7
     },
     "gnss":{
-        "sensor_tick": 0.0,
+        "sensor_tick": 0.22,
         "location_x": 0.0,
         "location_y": 0.0,
         "location_z": 0.0

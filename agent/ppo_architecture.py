@@ -13,36 +13,38 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
     def __init__(self, observation_space: spaces.Dict):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.image_dim = 128
-        self.lidar_dim = 128
         self.others_dim = 64
-        features_dim = self.image_dim + self.lidar_dim + self.others_dim
+        features_dim = self.image_dim + self.others_dim
 
         super().__init__(observation_space, features_dim=features_dim)
         self.action_dim = continuous_action_space.shape[0]  # Dimensionality of the action space
 
         # Custom CNN for processing the RGB data
         self.rgb_network = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, padding=1),
+            nn.Conv2d(3, 16, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2),
+
+            nn.Conv2d(16, 32, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(2),
 
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(2),
 
             nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.ReLU(),
-
-            nn.Conv2d(128, 256, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.AdaptiveAvgPool2d(1)
         )
 
-        # Custom CNN for processing the LiDAR data
-        self.lidar_network = nn.Sequential(
-            nn.Linear(3 * 500, 128),
-            nn.ReLU(),
-        )
+        for param in list(self.rgb_network.parameters())[:2]:  # Conv and ReLU of first block
+            param.requires_grad = False
+
+        # # Custom CNN for processing the LiDAR data
+        # self.lidar_network = nn.Sequential(
+        #     nn.Linear(3 * 500, 128),
+        #     nn.ReLU(),
+        # )
 
         # Define the neural network architecture for processing the rest of the input
         self.others_network = nn.Sequential(
@@ -53,33 +55,32 @@ class CustomExtractor_PPO_End2end(BaseFeaturesExtractor):
         )
 
     def forward(self, observations):
-        rgb_input, lidar_input, rest_input = self.process_observations(observations)
-        lidar_input = lidar_input.view(lidar_input.size(0), -1)  # Flatten the LiDAR data
+        rgb_input, rest_input = self.process_observations(observations)
+        # lidar_input = lidar_input.view(lidar_input.size(0), -1)  # Flatten the LiDAR data
                 
         image_features = self.rgb_network(rgb_input)
         image_features = torch.flatten(image_features, 1)
 
-        lidar_output = self.lidar_network(lidar_input)
+        # lidar_output = self.lidar_network(lidar_input)
         rest_output = self.others_network(rest_input)
                 
         if len(rest_output.shape) == 1:
             rest_output = rest_output.unsqueeze(0)
 
-        combined_features = torch.cat((image_features, lidar_output, rest_output), dim=1)
+        combined_features = torch.cat((image_features, rest_output), dim=1)
         return combined_features
 
     def process_observations(self, observations):
-        rgb_data = F.interpolate(observations['rgb_data'], size=(224, 224), mode='bilinear', align_corners=False)
         rgb_data = rgb_data / 255.0  # Normalize the pixel values to be in the range [0, 1]
 
-        lidar_data = observations['lidar_data']
+        # lidar_data = observations['lidar_data']
         # Normalize each coordinate axis (X, Y, Z) individually
-        lidar_data = (lidar_data - lidar_data.mean(dim=1, keepdim=True)) / (lidar_data.std(dim=1, keepdim=True) + 1e-6)
+        # lidar_data = (lidar_data - lidar_data.mean(dim=1, keepdim=True)) / (lidar_data.std(dim=1, keepdim=True) + 1e-6)
 
-        lidar_data = lidar_data.to(self.device)
+        # lidar_data = lidar_data.to(self.device)
         others_data = observations['others'].float()
 
-        return (rgb_data.float().to(self.device), lidar_data.to(self.device), others_data.to(self.device))
+        return (rgb_data.float().to(self.device), others_data.to(self.device))
 
 
 class CustomExtractor_PPO_Modular(BaseFeaturesExtractor):
